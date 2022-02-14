@@ -103,7 +103,7 @@ class User {
 			return false;
 		}
 
-		if ( intval( get_option( 'page_for_posts' ) ) === $post_id ) {
+		if ( get_option( 'page_for_posts' ) === $post_id ) {
 			return false;
 		}
 
@@ -261,11 +261,11 @@ class User {
 			]
 		);
 
-		$response_code = (int) wp_remote_retrieve_response_code( $response );
+		$body = wp_remote_retrieve_body( $response );
 
-		if ( 200 === $response_code ) {
+		if ( 'success' === $body ) {
 			self::set_introduction_viewed( [
-				'introductionKey' => Beta_Testers::BETA_TESTER_SIGNUP,
+				'introductionKey' => 'beta_tester_signup',
 			] );
 		}
 	}

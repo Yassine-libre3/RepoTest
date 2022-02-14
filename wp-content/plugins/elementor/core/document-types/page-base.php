@@ -5,6 +5,8 @@ use Elementor\Controls_Manager;
 use Elementor\Core\Base\Document;
 use Elementor\Group_Control_Background;
 use Elementor\Plugin;
+use Elementor\Settings;
+use Elementor\Core\Settings\Manager as SettingsManager;
 use Elementor\Utils;
 
 if ( ! defined( 'ABSPATH' ) ) {
@@ -38,7 +40,7 @@ abstract class PageBase extends Document {
 			'theme-elements',
 			[
 				'theme-elements-single' => [
-					'title' => esc_html__( 'Single', 'elementor' ),
+					'title' => __( 'Single', 'elementor' ),
 					'active' => false,
 				],
 			]
@@ -54,11 +56,11 @@ abstract class PageBase extends Document {
 	}
 
 	/**
-	 * @since 3.1.0
+	 * @since 2.0.0
 	 * @access protected
 	 */
-	protected function register_controls() {
-		parent::register_controls();
+	protected function _register_controls() {
+		parent::_register_controls();
 
 		self::register_hide_title_control( $this );
 
@@ -74,6 +76,14 @@ abstract class PageBase extends Document {
 	 * @param Document $document
 	 */
 	public static function register_hide_title_control( $document ) {
+		$page_title_selector = SettingsManager::get_settings_managers( 'general' )->get_model()->get_settings( 'elementor_page_title_selector' );
+
+		if ( ! $page_title_selector ) {
+			$page_title_selector = 'h1.entry-title';
+		}
+
+		$page_title_selector .= ', .elementor-page-title';
+
 		$document->start_injection( [
 			'of' => 'post_status',
 			'fallback' => [
@@ -84,11 +94,15 @@ abstract class PageBase extends Document {
 		$document->add_control(
 			'hide_title',
 			[
-				'label' => esc_html__( 'Hide Title', 'elementor' ),
+				'label' => __( 'Hide Title', 'elementor' ),
 				'type' => Controls_Manager::SWITCHER,
-				'description' => esc_html__( 'Not working? You can set a different selector for the title in Site Settings > Layout', 'elementor' ),
+				'description' => sprintf(
+					/* translators: %s: Setting page link */
+					__( 'Not working? You can set a different selector for the title in the <a href="%s" target="_blank">Settings page</a>.', 'elementor' ),
+					Settings::get_url() . '#tab-style'
+				),
 				'selectors' => [
-					':root' => '--page-title-display: none',
+					'{{WRAPPER}} ' . $page_title_selector => 'display: none',
 				],
 			]
 		);
@@ -106,7 +120,7 @@ abstract class PageBase extends Document {
 		$document->start_controls_section(
 			'section_page_style',
 			[
-				'label' => esc_html__( 'Body Style', 'elementor' ),
+				'label' => __( 'Body Style', 'elementor' ),
 				'tab' => Controls_Manager::TAB_STYLE,
 			]
 		);
@@ -129,7 +143,7 @@ abstract class PageBase extends Document {
 		$document->add_responsive_control(
 			'padding',
 			[
-				'label' => esc_html__( 'Padding', 'elementor' ),
+				'label' => __( 'Padding', 'elementor' ),
 				'type' => Controls_Manager::DIMENSIONS,
 				'size_units' => [ 'px', 'em', '%' ],
 				'selectors' => [
@@ -161,9 +175,10 @@ abstract class PageBase extends Document {
 			$document->add_control(
 				'post_excerpt',
 				[
-					'label' => esc_html__( 'Excerpt', 'elementor' ),
+					'label' => __( 'Excerpt', 'elementor' ),
 					'type' => Controls_Manager::TEXTAREA,
 					'default' => $document->post->post_excerpt,
+					'label_block' => true,
 				]
 			);
 		}
@@ -172,11 +187,11 @@ abstract class PageBase extends Document {
 			$document->add_control(
 				'post_featured_image',
 				[
-					'label' => esc_html__( 'Featured Image', 'elementor' ),
+					'label' => __( 'Featured Image', 'elementor' ),
 					'type' => Controls_Manager::MEDIA,
 					'default' => [
 						'id' => get_post_thumbnail_id(),
-						'url' => (string) get_the_post_thumbnail_url( $document->post->ID ),
+						'url' => get_the_post_thumbnail_url( $document->post->ID ),
 					],
 				]
 			);
@@ -212,7 +227,6 @@ abstract class PageBase extends Document {
 
 		$config['category'] = '';
 		$config['type'] = 'page';
-		$config['default_route'] = 'templates/pages';
 
 		return $config;
 	}

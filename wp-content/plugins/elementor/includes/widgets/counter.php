@@ -5,8 +5,7 @@ if ( ! defined( 'ABSPATH' ) ) {
 	exit; // Exit if accessed directly.
 }
 
-use Elementor\Core\Kits\Documents\Tabs\Global_Colors;
-use Elementor\Core\Kits\Documents\Tabs\Global_Typography;
+use Elementor\Core\Schemes;
 
 /**
  * Elementor counter widget.
@@ -42,7 +41,7 @@ class Widget_Counter extends Widget_Base {
 	 * @return string Widget title.
 	 */
 	public function get_title() {
-		return esc_html__( 'Counter', 'elementor' );
+		return __( 'Counter', 'elementor' );
 	}
 
 	/**
@@ -92,21 +91,21 @@ class Widget_Counter extends Widget_Base {
 	 *
 	 * Adds different input fields to allow the user to change and customize the widget settings.
 	 *
-	 * @since 3.1.0
+	 * @since 1.0.0
 	 * @access protected
 	 */
-	protected function register_controls() {
+	protected function _register_controls() {
 		$this->start_controls_section(
 			'section_counter',
 			[
-				'label' => esc_html__( 'Counter', 'elementor' ),
+				'label' => __( 'Counter', 'elementor' ),
 			]
 		);
 
 		$this->add_control(
 			'starting_number',
 			[
-				'label' => esc_html__( 'Starting Number', 'elementor' ),
+				'label' => __( 'Starting Number', 'elementor' ),
 				'type' => Controls_Manager::NUMBER,
 				'default' => 0,
 				'dynamic' => [
@@ -118,7 +117,7 @@ class Widget_Counter extends Widget_Base {
 		$this->add_control(
 			'ending_number',
 			[
-				'label' => esc_html__( 'Ending Number', 'elementor' ),
+				'label' => __( 'Ending Number', 'elementor' ),
 				'type' => Controls_Manager::NUMBER,
 				'default' => 100,
 				'dynamic' => [
@@ -130,7 +129,7 @@ class Widget_Counter extends Widget_Base {
 		$this->add_control(
 			'prefix',
 			[
-				'label' => esc_html__( 'Number Prefix', 'elementor' ),
+				'label' => __( 'Number Prefix', 'elementor' ),
 				'type' => Controls_Manager::TEXT,
 				'dynamic' => [
 					'active' => true,
@@ -143,20 +142,20 @@ class Widget_Counter extends Widget_Base {
 		$this->add_control(
 			'suffix',
 			[
-				'label' => esc_html__( 'Number Suffix', 'elementor' ),
+				'label' => __( 'Number Suffix', 'elementor' ),
 				'type' => Controls_Manager::TEXT,
 				'dynamic' => [
 					'active' => true,
 				],
 				'default' => '',
-				'placeholder' => esc_html__( 'Plus', 'elementor' ),
+				'placeholder' => __( 'Plus', 'elementor' ),
 			]
 		);
 
 		$this->add_control(
 			'duration',
 			[
-				'label' => esc_html__( 'Animation Duration', 'elementor' ),
+				'label' => __( 'Animation Duration', 'elementor' ),
 				'type' => Controls_Manager::NUMBER,
 				'default' => 2000,
 				'min' => 100,
@@ -167,18 +166,18 @@ class Widget_Counter extends Widget_Base {
 		$this->add_control(
 			'thousand_separator',
 			[
-				'label' => esc_html__( 'Thousand Separator', 'elementor' ),
+				'label' => __( 'Thousand Separator', 'elementor' ),
 				'type' => Controls_Manager::SWITCHER,
 				'default' => 'yes',
-				'label_on' => esc_html__( 'Show', 'elementor' ),
-				'label_off' => esc_html__( 'Hide', 'elementor' ),
+				'label_on' => __( 'Show', 'elementor' ),
+				'label_off' => __( 'Hide', 'elementor' ),
 			]
 		);
 
 		$this->add_control(
 			'thousand_separator_char',
 			[
-				'label' => esc_html__( 'Separator', 'elementor' ),
+				'label' => __( 'Separator', 'elementor' ),
 				'type' => Controls_Manager::SELECT,
 				'condition' => [
 					'thousand_separator' => 'yes',
@@ -194,21 +193,21 @@ class Widget_Counter extends Widget_Base {
 		$this->add_control(
 			'title',
 			[
-				'label' => esc_html__( 'Title', 'elementor' ),
+				'label' => __( 'Title', 'elementor' ),
 				'type' => Controls_Manager::TEXT,
 				'label_block' => true,
 				'dynamic' => [
 					'active' => true,
 				],
-				'default' => esc_html__( 'Cool Number', 'elementor' ),
-				'placeholder' => esc_html__( 'Cool Number', 'elementor' ),
+				'default' => __( 'Cool Number', 'elementor' ),
+				'placeholder' => __( 'Cool Number', 'elementor' ),
 			]
 		);
 
 		$this->add_control(
 			'view',
 			[
-				'label' => esc_html__( 'View', 'elementor' ),
+				'label' => __( 'View', 'elementor' ),
 				'type' => Controls_Manager::HIDDEN,
 				'default' => 'traditional',
 			]
@@ -219,7 +218,7 @@ class Widget_Counter extends Widget_Base {
 		$this->start_controls_section(
 			'section_number',
 			[
-				'label' => esc_html__( 'Number', 'elementor' ),
+				'label' => __( 'Number', 'elementor' ),
 				'tab' => Controls_Manager::TAB_STYLE,
 			]
 		);
@@ -227,10 +226,11 @@ class Widget_Counter extends Widget_Base {
 		$this->add_control(
 			'number_color',
 			[
-				'label' => esc_html__( 'Text Color', 'elementor' ),
+				'label' => __( 'Text Color', 'elementor' ),
 				'type' => Controls_Manager::COLOR,
-				'global' => [
-					'default' => Global_Colors::COLOR_PRIMARY,
+				'scheme' => [
+					'type' => Schemes\Color::get_type(),
+					'value' => Schemes\Color::COLOR_1,
 				],
 				'selectors' => [
 					'{{WRAPPER}} .elementor-counter-number-wrapper' => 'color: {{VALUE}};',
@@ -242,17 +242,7 @@ class Widget_Counter extends Widget_Base {
 			Group_Control_Typography::get_type(),
 			[
 				'name' => 'typography_number',
-				'global' => [
-					'default' => Global_Typography::TYPOGRAPHY_PRIMARY,
-				],
-				'selector' => '{{WRAPPER}} .elementor-counter-number-wrapper',
-			]
-		);
-
-		$this->add_group_control(
-			Group_Control_Text_Shadow::get_type(),
-			[
-				'name' => 'number_shadow',
+				'scheme' => Schemes\Typography::TYPOGRAPHY_1,
 				'selector' => '{{WRAPPER}} .elementor-counter-number-wrapper',
 			]
 		);
@@ -262,7 +252,7 @@ class Widget_Counter extends Widget_Base {
 		$this->start_controls_section(
 			'section_title',
 			[
-				'label' => esc_html__( 'Title', 'elementor' ),
+				'label' => __( 'Title', 'elementor' ),
 				'tab' => Controls_Manager::TAB_STYLE,
 			]
 		);
@@ -270,10 +260,11 @@ class Widget_Counter extends Widget_Base {
 		$this->add_control(
 			'title_color',
 			[
-				'label' => esc_html__( 'Text Color', 'elementor' ),
+				'label' => __( 'Text Color', 'elementor' ),
 				'type' => Controls_Manager::COLOR,
-				'global' => [
-					'default' => Global_Colors::COLOR_SECONDARY,
+				'scheme' => [
+					'type' => Schemes\Color::get_type(),
+					'value' => Schemes\Color::COLOR_2,
 				],
 				'selectors' => [
 					'{{WRAPPER}} .elementor-counter-title' => 'color: {{VALUE}};',
@@ -285,17 +276,7 @@ class Widget_Counter extends Widget_Base {
 			Group_Control_Typography::get_type(),
 			[
 				'name' => 'typography_title',
-				'global' => [
-					'default' => Global_Typography::TYPOGRAPHY_SECONDARY,
-				],
-				'selector' => '{{WRAPPER}} .elementor-counter-title',
-			]
-		);
-
-		$this->add_group_control(
-			Group_Control_Text_Shadow::get_type(),
-			[
-				'name' => 'title_shadow',
+				'scheme' => Schemes\Typography::TYPOGRAPHY_2,
 				'selector' => '{{WRAPPER}} .elementor-counter-title',
 			]
 		);
@@ -308,17 +289,11 @@ class Widget_Counter extends Widget_Base {
 	 *
 	 * Written as a Backbone JavaScript template and used to generate the live preview.
 	 *
-	 * @since 2.9.0
+	 * @since 1.0.0
 	 * @access protected
 	 */
-	protected function content_template() {
+	protected function _content_template() {
 		?>
-		<# view.addRenderAttribute( 'counter-title', {
-			'class': 'elementor-counter-title'
-		} );
-
-		view.addInlineEditingAttributes( 'counter-title' );
-		#>
 		<div class="elementor-counter">
 			<div class="elementor-counter-number-wrapper">
 				<span class="elementor-counter-number-prefix">{{{ settings.prefix }}}</span>
@@ -326,7 +301,7 @@ class Widget_Counter extends Widget_Base {
 				<span class="elementor-counter-number-suffix">{{{ settings.suffix }}}</span>
 			</div>
 			<# if ( settings.title ) {
-				#><div {{{ view.getRenderAttributeString( 'counter-title' ) }}}>{{{ settings.title }}}</div><#
+				#><div class="elementor-counter-title">{{{ settings.title }}}</div><#
 			} #>
 		</div>
 		<?php
@@ -354,19 +329,15 @@ class Widget_Counter extends Widget_Base {
 			$delimiter = empty( $settings['thousand_separator_char'] ) ? ',' : $settings['thousand_separator_char'];
 			$this->add_render_attribute( 'counter', 'data-delimiter', $delimiter );
 		}
-
-		$this->add_render_attribute( 'counter-title', 'class', 'elementor-counter-title' );
-
-		$this->add_inline_editing_attributes( 'counter-title' );
 		?>
 		<div class="elementor-counter">
 			<div class="elementor-counter-number-wrapper">
-				<span class="elementor-counter-number-prefix"><?php $this->print_unescaped_setting( 'prefix' ); ?></span>
-				<span <?php $this->print_render_attribute_string( 'counter' ); ?>><?php $this->print_unescaped_setting( 'starting_number' ); ?></span>
-				<span class="elementor-counter-number-suffix"><?php $this->print_unescaped_setting( 'suffix' ); ?></span>
+				<span class="elementor-counter-number-prefix"><?php echo $settings['prefix']; ?></span>
+				<span <?php echo $this->get_render_attribute_string( 'counter' ); ?>><?php echo $settings['starting_number']; ?></span>
+				<span class="elementor-counter-number-suffix"><?php echo $settings['suffix']; ?></span>
 			</div>
 			<?php if ( $settings['title'] ) : ?>
-				<div <?php $this->print_render_attribute_string( 'counter-title' ); ?>><?php $this->print_unescaped_setting( 'title' ); ?></div>
+				<div class="elementor-counter-title"><?php echo $settings['title']; ?></div>
 			<?php endif; ?>
 		</div>
 		<?php

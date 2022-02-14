@@ -5,8 +5,7 @@ if ( ! defined( 'ABSPATH' ) ) {
 	exit; // Exit if accessed directly.
 }
 
-use Elementor\Core\Kits\Documents\Tabs\Global_Colors;
-use Elementor\Core\Kits\Documents\Tabs\Global_Typography;
+use Elementor\Core\Schemes;
 
 /**
  * Elementor heading widget.
@@ -42,7 +41,7 @@ class Widget_Heading extends Widget_Base {
 	 * @return string Widget title.
 	 */
 	public function get_title() {
-		return esc_html__( 'Heading', 'elementor' );
+		return __( 'Heading', 'elementor' );
 	}
 
 	/**
@@ -94,34 +93,34 @@ class Widget_Heading extends Widget_Base {
 	 *
 	 * Adds different input fields to allow the user to change and customize the widget settings.
 	 *
-	 * @since 3.1.0
+	 * @since 1.0.0
 	 * @access protected
 	 */
-	protected function register_controls() {
+	protected function _register_controls() {
 		$this->start_controls_section(
 			'section_title',
 			[
-				'label' => esc_html__( 'Title', 'elementor' ),
+				'label' => __( 'Title', 'elementor' ),
 			]
 		);
 
 		$this->add_control(
 			'title',
 			[
-				'label' => esc_html__( 'Title', 'elementor' ),
+				'label' => __( 'Title', 'elementor' ),
 				'type' => Controls_Manager::TEXTAREA,
 				'dynamic' => [
 					'active' => true,
 				],
-				'placeholder' => esc_html__( 'Enter your title', 'elementor' ),
-				'default' => esc_html__( 'Add Your Heading Text Here', 'elementor' ),
+				'placeholder' => __( 'Enter your title', 'elementor' ),
+				'default' => __( 'Add Your Heading Text Here', 'elementor' ),
 			]
 		);
 
 		$this->add_control(
 			'link',
 			[
-				'label' => esc_html__( 'Link', 'elementor' ),
+				'label' => __( 'Link', 'elementor' ),
 				'type' => Controls_Manager::URL,
 				'dynamic' => [
 					'active' => true,
@@ -136,16 +135,16 @@ class Widget_Heading extends Widget_Base {
 		$this->add_control(
 			'size',
 			[
-				'label' => esc_html__( 'Size', 'elementor' ),
+				'label' => __( 'Size', 'elementor' ),
 				'type' => Controls_Manager::SELECT,
 				'default' => 'default',
 				'options' => [
-					'default' => esc_html__( 'Default', 'elementor' ),
-					'small' => esc_html__( 'Small', 'elementor' ),
-					'medium' => esc_html__( 'Medium', 'elementor' ),
-					'large' => esc_html__( 'Large', 'elementor' ),
-					'xl' => esc_html__( 'XL', 'elementor' ),
-					'xxl' => esc_html__( 'XXL', 'elementor' ),
+					'default' => __( 'Default', 'elementor' ),
+					'small' => __( 'Small', 'elementor' ),
+					'medium' => __( 'Medium', 'elementor' ),
+					'large' => __( 'Large', 'elementor' ),
+					'xl' => __( 'XL', 'elementor' ),
+					'xxl' => __( 'XXL', 'elementor' ),
 				],
 			]
 		);
@@ -153,7 +152,7 @@ class Widget_Heading extends Widget_Base {
 		$this->add_control(
 			'header_size',
 			[
-				'label' => esc_html__( 'HTML Tag', 'elementor' ),
+				'label' => __( 'HTML Tag', 'elementor' ),
 				'type' => Controls_Manager::SELECT,
 				'options' => [
 					'h1' => 'H1',
@@ -173,23 +172,23 @@ class Widget_Heading extends Widget_Base {
 		$this->add_responsive_control(
 			'align',
 			[
-				'label' => esc_html__( 'Alignment', 'elementor' ),
+				'label' => __( 'Alignment', 'elementor' ),
 				'type' => Controls_Manager::CHOOSE,
 				'options' => [
 					'left' => [
-						'title' => esc_html__( 'Left', 'elementor' ),
+						'title' => __( 'Left', 'elementor' ),
 						'icon' => 'eicon-text-align-left',
 					],
 					'center' => [
-						'title' => esc_html__( 'Center', 'elementor' ),
+						'title' => __( 'Center', 'elementor' ),
 						'icon' => 'eicon-text-align-center',
 					],
 					'right' => [
-						'title' => esc_html__( 'Right', 'elementor' ),
+						'title' => __( 'Right', 'elementor' ),
 						'icon' => 'eicon-text-align-right',
 					],
 					'justify' => [
-						'title' => esc_html__( 'Justified', 'elementor' ),
+						'title' => __( 'Justified', 'elementor' ),
 						'icon' => 'eicon-text-align-justify',
 					],
 				],
@@ -203,7 +202,7 @@ class Widget_Heading extends Widget_Base {
 		$this->add_control(
 			'view',
 			[
-				'label' => esc_html__( 'View', 'elementor' ),
+				'label' => __( 'View', 'elementor' ),
 				'type' => Controls_Manager::HIDDEN,
 				'default' => 'traditional',
 			]
@@ -214,7 +213,7 @@ class Widget_Heading extends Widget_Base {
 		$this->start_controls_section(
 			'section_title_style',
 			[
-				'label' => esc_html__( 'Title', 'elementor' ),
+				'label' => __( 'Title', 'elementor' ),
 				'tab' => Controls_Manager::TAB_STYLE,
 			]
 		);
@@ -222,13 +221,15 @@ class Widget_Heading extends Widget_Base {
 		$this->add_control(
 			'title_color',
 			[
-				'label' => esc_html__( 'Text Color', 'elementor' ),
+				'label' => __( 'Text Color', 'elementor' ),
 				'type' => Controls_Manager::COLOR,
-				'global' => [
-					'default' => Global_Colors::COLOR_PRIMARY,
+				'scheme' => [
+					'type' => Schemes\Color::get_type(),
+					'value' => Schemes\Color::COLOR_1,
 				],
 				'selectors' => [
-					'{{WRAPPER}} .elementor-heading-title' => 'color: {{VALUE}};',
+					// Stronger selector to avoid section style from overwriting
+					'{{WRAPPER}}.elementor-widget-heading .elementor-heading-title' => 'color: {{VALUE}};',
 				],
 			]
 		);
@@ -237,17 +238,7 @@ class Widget_Heading extends Widget_Base {
 			Group_Control_Typography::get_type(),
 			[
 				'name' => 'typography',
-				'global' => [
-					'default' => Global_Typography::TYPOGRAPHY_PRIMARY,
-				],
-				'selector' => '{{WRAPPER}} .elementor-heading-title',
-			]
-		);
-
-		$this->add_group_control(
-			Group_Control_Text_Stroke::get_type(),
-			[
-				'name' => 'text_stroke',
+				'scheme' => Schemes\Typography::TYPOGRAPHY_1,
 				'selector' => '{{WRAPPER}} .elementor-heading-title',
 			]
 		);
@@ -263,10 +254,10 @@ class Widget_Heading extends Widget_Base {
 		$this->add_control(
 			'blend_mode',
 			[
-				'label' => esc_html__( 'Blend Mode', 'elementor' ),
+				'label' => __( 'Blend Mode', 'elementor' ),
 				'type' => Controls_Manager::SELECT,
 				'options' => [
-					'' => esc_html__( 'Normal', 'elementor' ),
+					'' => __( 'Normal', 'elementor' ),
 					'multiply' => 'Multiply',
 					'screen' => 'Screen',
 					'overlay' => 'Overlay',
@@ -316,15 +307,22 @@ class Widget_Heading extends Widget_Base {
 		$title = $settings['title'];
 
 		if ( ! empty( $settings['link']['url'] ) ) {
-			$this->add_link_attributes( 'url', $settings['link'] );
+			$this->add_render_attribute( 'url', 'href', $settings['link']['url'] );
+
+			if ( $settings['link']['is_external'] ) {
+				$this->add_render_attribute( 'url', 'target', '_blank' );
+			}
+
+			if ( ! empty( $settings['link']['nofollow'] ) ) {
+				$this->add_render_attribute( 'url', 'rel', 'nofollow' );
+			}
 
 			$title = sprintf( '<a %1$s>%2$s</a>', $this->get_render_attribute_string( 'url' ), $title );
 		}
 
-		$title_html = sprintf( '<%1$s %2$s>%3$s</%1$s>', Utils::validate_html_tag( $settings['header_size'] ), $this->get_render_attribute_string( 'title' ), $title );
+		$title_html = sprintf( '<%1$s %2$s>%3$s</%1$s>', $settings['header_size'], $this->get_render_attribute_string( 'title' ), $title );
 
-		// PHPCS - the variable $title_html holds safe data.
-		echo $title_html; // phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped
+		echo $title_html;
 	}
 
 	/**
@@ -332,10 +330,10 @@ class Widget_Heading extends Widget_Base {
 	 *
 	 * Written as a Backbone JavaScript template and used to generate the live preview.
 	 *
-	 * @since 2.9.0
+	 * @since 1.0.0
 	 * @access protected
 	 */
-	protected function content_template() {
+	protected function _content_template() {
 		?>
 		<#
 		var title = settings.title;
@@ -348,8 +346,7 @@ class Widget_Heading extends Widget_Base {
 
 		view.addInlineEditingAttributes( 'title' );
 
-		var headerSizeTag = elementor.helpers.validateHTMLTag( settings.header_size ),
-			title_html = '<' + headerSizeTag  + ' ' + view.getRenderAttributeString( 'title' ) + '>' + title + '</' + headerSizeTag + '>';
+		var title_html = '<' + settings.header_size  + ' ' + view.getRenderAttributeString( 'title' ) + '>' + title + '</' + settings.header_size + '>';
 
 		print( title_html );
 		#>

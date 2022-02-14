@@ -6,17 +6,10 @@ if ( ! defined( 'ABSPATH' ) ) {
 }
 
 class Post extends PageBase {
-
-	public static function get_properties() {
-		$properties = parent::get_properties();
-
-		$properties['support_kit'] = true;
-		$properties['cpt'] = [ 'post' ];
-
-		return $properties;
-	}
-
-	public static function get_type() {
+	/**
+	 * @access public
+	 */
+	public function get_name() {
 		return 'wp-post';
 	}
 
@@ -25,10 +18,6 @@ class Post extends PageBase {
 	 * @static
 	 */
 	public static function get_title() {
-		return esc_html__( 'Post', 'elementor' );
-	}
-
-	public static function get_plural_title() {
-		return __( 'Posts', 'elementor' );
+		return __( 'Post', 'elementor' );
 	}
 }

@@ -27,11 +27,7 @@ class Edit extends Base_Category {
 	 * @return string
 	 */
 	public function get_title() {
-		return esc_html__( 'Edit', 'elementor' );
-	}
-
-	public function get_id() {
-		return 'edit';
+		return __( 'Edit', 'elementor' );
 	}
 
 	/**
@@ -67,11 +63,12 @@ class Edit extends Base_Category {
 
 		$document_types = Plugin::$instance->documents->get_document_types( [
 			'is_editable' => true,
-			'show_in_finder' => true,
 		] );
 
+		// TODO: Remove on 2.4.0.
+		unset( $document_types['widget'] );
+
 		$recently_edited_query_args = [
-			'no_found_rows' => true,
 			'post_type' => $post_types,
 			'post_status' => [ 'publish', 'draft', 'private', 'pending', 'future' ],
 			'posts_per_page' => '10',
@@ -115,21 +112,21 @@ class Edit extends Base_Category {
 			$icon = 'document-file';
 
 			if ( $is_template ) {
-				$description = esc_html__( 'Template', 'elementor' ) . ' / ' . $description;
+				$description = __( 'Template', 'elementor' ) . ' / ' . $description;
 
 				$icon = 'post-title';
 			}
 
 			$items[] = [
 				'icon' => $icon,
-				'title' => esc_html( $post->post_title ),
+				'title' => $post->post_title,
 				'description' => $description,
 				'url' => $document->get_edit_url(),
 				'actions' => [
 					[
 						'name' => 'view',
 						'url' => $document->get_permalink(),
-						'icon' => 'preview-medium',
+						'icon' => 'eye',
 					],
 				],
 			];

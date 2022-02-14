@@ -1,8 +1,6 @@
 <?php
 namespace Elementor;
 
-use Elementor\Core\Experiments\Manager;
-
 if ( ! defined( 'ABSPATH' ) ) {
 	exit; // Exit if accessed directly.
 }
@@ -257,7 +255,7 @@ class Elements_Manager {
 		 *
 		 * @since 1.0.0
 		 */
-		do_action( 'elementor/elements/elements_registered', $this );
+		do_action( 'elementor/elements/elements_registered' );
 	}
 
 	/**
@@ -271,37 +269,25 @@ class Elements_Manager {
 	private function init_categories() {
 		$this->categories = [
 			'basic' => [
-				'title' => esc_html__( 'Basic', 'elementor' ),
+				'title' => __( 'Basic', 'elementor' ),
 				'icon' => 'eicon-font',
 			],
 			'pro-elements' => [
-				'title' => esc_html__( 'Pro', 'elementor' ),
+				'title' => __( 'Pro', 'elementor' ),
 			],
 			'general' => [
-				'title' => esc_html__( 'General', 'elementor' ),
+				'title' => __( 'General', 'elementor' ),
 				'icon' => 'eicon-font',
 			],
 			'theme-elements' => [
-				'title' => esc_html__( 'Site', 'elementor' ),
+				'title' => __( 'Site', 'elementor' ),
 				'active' => false,
 			],
 			'woocommerce-elements' => [
-				'title' => esc_html__( 'WooCommerce', 'elementor' ),
+				'title' => __( 'WooCommerce', 'elementor' ),
 				'active' => false,
 			],
 		];
-
-		// Not using the `add_category` because it doesn't allow 3rd party to inject a category on top the others.
-		if ( Plugin::instance()->experiments->is_feature_active( 'favorite-widgets' ) ) {
-			$this->categories = array_merge_recursive( [
-				'favorites' => [
-					'title' => esc_html__( 'Favorites', 'elementor' ),
-					'icon' => 'eicon-heart',
-					'sort' => 'a-z',
-					'hideIfEmpty' => false,
-				],
-			], $this->categories );
-		}
 
 		/**
 		 * When categories are registered.
@@ -319,12 +305,12 @@ class Elements_Manager {
 		do_action( 'elementor/elements/categories_registered', $this );
 
 		$this->categories['pojo'] = [
-			'title' => esc_html__( 'Pojo Themes', 'elementor' ),
+			'title' => __( 'Pojo Themes', 'elementor' ),
 			'icon' => 'eicon-pojome',
 		];
 
 		$this->categories['wordpress'] = [
-			'title' => esc_html__( 'WordPress', 'elementor' ),
+			'title' => __( 'WordPress', 'elementor' ),
 			'icon' => 'eicon-wordpress',
 			'active' => false,
 		];

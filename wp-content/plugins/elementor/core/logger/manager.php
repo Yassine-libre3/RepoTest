@@ -7,7 +7,7 @@ use Elementor\Core\Logger\Loggers\Logger_Interface;
 use Elementor\Core\Logger\Items\PHP;
 use Elementor\Core\Logger\Items\JS;
 use Elementor\Plugin;
-use Elementor\Modules\System_Info\Module as System_Info;
+use Elementor\System_Info\Main as System_Info;
 
 if ( ! defined( 'ABSPATH' ) ) {
 	exit; // Exit if accessed directly
@@ -23,10 +23,8 @@ class Manager extends BaseModule {
 		return 'log';
 	}
 
-	public function shutdown( $last_error = null ) {
-		if ( ! $last_error ) {
-			$last_error = error_get_last();
-		}
+	public function shutdown() {
+		$last_error = error_get_last();
 
 		if ( ! $last_error ) {
 			return;
@@ -52,34 +50,6 @@ class Manager extends BaseModule {
 		$this->get_logger()->log( $item );
 	}
 
-	public function rest_error_handler( $error_number, $error_message, $error_file, $error_line ) {
-		$error = new \WP_Error( $error_number, $error_message, [
-			'type' => $error_number,
-			'message' => $error_message,
-			'file' => $error_file,
-			'line' => $error_line,
-		] );
-
-		// Notify $e.data.
-		if ( ! headers_sent() ) {
-			header( 'Content-Type: application/json; charset=UTF-8' );
-
-			http_response_code( 500 );
-
-			if ( defined( 'WP_DEBUG' ) && WP_DEBUG ) {
-				echo wp_json_encode( $error->get_error_data() );
-			} else {
-				echo wp_json_encode( [
-					'message' => 'Server error, see Elementor => System Info',
-				] );
-			}
-		}
-
-		$this->shutdown( $error->get_error_data() );
-
-		exit;
-	}
-
 	public function add_system_info_report() {
 		System_Info::add_report(
 			'log', [
@@ -101,18 +71,15 @@ class Manager extends BaseModule {
 		/** @var Module $ajax */
 		$ajax = Plugin::$instance->common->get_component( 'ajax' );
 
-		// PHPCS ignore is added throughout this method because nonce verification happens in the $ajax->verify_request_nonce() method.
-		if ( ! $ajax->verify_request_nonce() || empty( $_POST['data'] ) ) { // phpcs:ignore WordPress.Security.NonceVerification.Missing
+		if ( ! $ajax->verify_request_nonce() || empty( $_POST['data'] ) ) {
 			wp_send_json_error();
 		}
 
-		// PHPCS - See comment above.
-		array_walk_recursive( $_POST['data'], function( &$value ) { // phpcs:ignore WordPress.Security.NonceVerification.Missing
+		array_walk_recursive( $_POST['data'], function( &$value ) {
 			$value = sanitize_text_field( $value );
 		} );
 
-		// PHPCS - See comment above.
-		foreach ( $_POST['data'] as $error ) { // phpcs:ignore WordPress.Security.NonceVerification.Missing
+		foreach ( $_POST['data'] as $error ) {
 			$error['type'] = Logger_Interface::LEVEL_ERROR;
 
 			if ( ! empty( $error['customFields'] ) ) {
